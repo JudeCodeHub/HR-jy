@@ -1,0 +1,136 @@
+# Project Setup and Local Run Guide
+
+## Project Overview
+This is a full-stack HR management application with:
+- **Backend**: Node.js/Express server with MongoDB, handling API routes for employees, attendance, payments, etc.
+- **Frontend**: React Native (Expo) mobile app for HR and employee interfaces.
+- **AI Components**: Python Flask services for face recognition and antispoofing using TensorFlow and face_recognition library.
+
+## Prerequisites and Tools Setup
+
+### 1. Node.js and npm
+- Download and install Node.js (version 16 or higher) from https://nodejs.org/
+- npm comes bundled with Node.js
+
+### 2. Python 3
+- Download and install Python 3.8+ from https://www.python.org/
+- Install pip (Python package manager)
+
+### 3. MongoDB
+- For local development: Install MongoDB Community Server from https://www.mongodb.com/try/download/community
+- Alternatively, use MongoDB Atlas (cloud) as configured in the code
+- If using local MongoDB, update the connection string in Backend/index.js
+
+### 4. Expo CLI (for React Native)
+- Install globally: `npm install -g @expo/cli`
+
+### 5. Android Studio (for Android development)
+- Download from https://developer.android.com/studio
+- Set up Android SDK and emulator
+
+### 6. Xcode (for iOS development, macOS only)
+- Download from Mac App Store
+- Required for iOS simulator
+
+### 7. Git
+- For cloning repositories if needed
+
+## Installation Steps
+
+### Backend Setup
+1. Navigate to the Backend directory:
+   ```
+   cd Backend
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Ensure MongoDB is running (if using local instance)
+
+### Frontend Setup
+1. Navigate to the Frontend directory:
+   ```
+   cd Frontend
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+### Python AI Components Setup
+1. Navigate to the Python directories:
+   ```
+   cd Backend/FaceRecognation
+   cd Backend/Antispoofing/Model
+   ```
+
+2. Install required Python packages:
+   ```
+   pip install flask flask-cors numpy face-recognition tensorflow pillow opencv-python
+   ```
+
+3. Note: The models (0.h5, 1.h5) and EncodeFile.p are already present in the repository
+
+## Running the Application
+
+### 1. Start MongoDB
+- If using local MongoDB: Start the MongoDB service
+- If using Atlas: No action needed (connection string is in code)
+
+### 2. Start Backend Server
+```
+
+cd Backend
+npm start
+```
+- Server runs on http://localhost:3500
+
+### 3. Start Python Face Recognition Service
+```
+cd Backend/FaceRecognation
+ 
+```
+- Assumes Flask runs on default port (5000)
+
+### 4. Start Python Antispoofing Service
+- The main.py is a standalone script, run as needed:
+```
+cd Backend/Antispoofing/Model
+python main.py
+```
+
+### 5. Start Frontend (React Native App)
+```
+cd Frontend
+expo start
+```
+- Choose platform: Android (a), iOS (i), or Web (w)
+- For Android: Ensure emulator is running or device is connected
+- For iOS: Ensure simulator is available
+
+## Configuration Notes
+
+- **Database**: Update MongoDB connection string in Backend/index.js if using different database
+- **Ports**: Backend on 3500, Python services on 5000 (default Flask)
+- **Environment Variables**: Consider using .env files for sensitive data like database credentials
+- **Models**: Ensure TensorFlow models are compatible with your Python version
+
+## Troubleshooting
+
+- **Port conflicts**: Change ports in code if 3500 or 5000 are in use
+- **Python dependencies**: Use virtual environment (`python -m venv venv`) to avoid conflicts
+- **React Native issues**: Clear cache with `expo r -c`
+- **Face recognition**: Ensure camera permissions are granted in the app
+
+## Development Notes
+
+- Backend uses JWT for authentication
+- Frontend uses Expo for cross-platform development
+- AI components use pre-trained models for face detection and spoofing prevention
+- Database schemas are defined in Backend/Models/
+
+For any issues, check console logs and ensure all services are running on correct ports.

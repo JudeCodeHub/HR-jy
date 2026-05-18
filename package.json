@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "react-jwt": "^1.2.2"
+  }
+}
