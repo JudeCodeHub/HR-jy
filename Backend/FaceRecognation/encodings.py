@@ -1,4 +1,4 @@
-
+import os
 import base64
 import pymongo
 from io import BytesIO
@@ -7,10 +7,29 @@ import numpy as np
 import face_recognition
 import pickle
 
+# Manual .env loader to avoid requiring extra pip packages
+def load_env(filepath):
+    if os.path.exists(filepath):
+        with open(filepath, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, val = line.split('=', 1)
+                    os.environ[key.strip()] = val.strip()
+
+# Look for .env in current folder, parent folder, and root folder
+load_env(".env")
+if "DB_CONNECTION_STRING" not in os.environ:
+    load_env("../.env")      # Look in parent folder (Backend/.env)
+if "DB_CONNECTION_STRING" not in os.environ:
+    load_env("../../.env")    # Look in root folder (Workspace/.env)
+
 # Connect to MongoDB Atlas
-client = pymongo.MongoClient("mongodb://jasky:Jky210736@ac-iinjp0s-shard-00-00.bp5osz8.mongodb.net:27017,ac-iinjp0s-shard-00-01.bp5osz8.mongodb.net:27017,ac-iinjp0s-shard-00-02.bp5osz8.mongodb.net:27017/?ssl=true&replicaSet=atlas-ko562g-shard-0&authSource=admin&appName=Cluster1")
+db_uri = os.environ.get("DB_CONNECTION_STRING")
+if not db_uri:
+    raise ValueError("Error: DB_CONNECTION_STRING not found in environment or .env file.")
 
-
+client = pymongo.MongoClient(db_uri)
 db=client["test"]
 col=db["employeees"]
 

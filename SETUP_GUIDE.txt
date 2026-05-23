@@ -72,6 +72,8 @@ Since you will be running the app on a physical phone, the phone needs to connec
    ```
    *(Keep this terminal open. The AI service runs on port 5000).*
 
+   *(Note: The face encoding compilation script `encodings.py` will automatically read the MongoDB connection string from the parent folder's `Backend/.env` file. You do not need to create a second `.env` file in the `FaceRecognation` directory).*
+
 ---
 
 ## Phase 5: Start Frontend App (Expo Mobile)
