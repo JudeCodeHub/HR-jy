@@ -37,20 +37,28 @@ Names=[]
 Ids=[]
 Images=[]
 for data in x:
-    #print(data)
-    uri=data["image"]
-    base64_str=uri.split(",")[1]
-    image_data=base64.b64decode(base64_str)
+    try:
+        uri=data["image"]
+        base64_str=uri.split(",")[1]
+        image_data=base64.b64decode(base64_str)
 
-    image=Image.open(BytesIO(image_data))
+        image=Image.open(BytesIO(image_data))
+        image=image.convert('RGB')
+        np_image=np.array(image)
 
-    np_image=np.array(image)
+        # Check if face_recognition can find a face in the image
+        encodings = face_recognition.face_encodings(np_image)
+        if len(encodings) > 0:
+            Names.append(data["Name"])
+            Ids.append(data["_id"])
+            Images.append(np_image)
+            print(f"Loaded face for: {data['Name']}")
+        else:
+            print(f"Warning: No face found in image for user {data.get('Name', 'Unknown')} (ID: {data['_id']}). Skipping.")
+    except Exception as e:
+        print(f"Error processing entry for {data.get('Name', 'Unknown')}: {e}")
 
-
-    Names.append(data["Name"])
-    Ids.append(data["_id"])
-    Images.append(np_image)
-
+print(f"Successfully loaded {len(Images)} face(s).")
 knownencodelist=findencodingss(Images)
 
 encodelistknownwithnameid=[knownencodelist,Names,Ids]

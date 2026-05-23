@@ -1,136 +1,116 @@
-# Project Setup and Local Run Guide
+# MASTER HR - Complete Setup and Run Guide
 
-## Project Overview
-This is a full-stack HR management application with:
-- **Backend**: Node.js/Express server with MongoDB, handling API routes for employees, attendance, payments, etc.
-- **Frontend**: React Native (Expo) mobile app for HR and employee interfaces.
-- **AI Components**: Python Flask services for face recognition and antispoofing using TensorFlow and face_recognition library.
+Follow these steps in order to set up and run the application on your laptop.
 
-## Prerequisites and Tools Setup
+---
 
-### 1. Node.js and npm
-- Download and install Node.js (version 16 or higher) from https://nodejs.org/
-- npm comes bundled with Node.js
+## Phase 1: Prerequisites & Installations
+Make sure the following are installed on your laptop before starting:
+1. **Node.js** (version 18 or higher): Download from [nodejs.org](https://nodejs.org/)
+2. **Python 3.10**: Download from [python.org](https://www.python.org/) 
+   *(IMPORTANT: Check the box "Add Python to PATH" during installation).*
+3. **Expo Go App**: Download "Expo Go" on your physical iOS or Android phone from the App Store / Play Store.
 
-### 2. Python 3
-- Download and install Python 3.8+ from https://www.python.org/
-- Install pip (Python package manager)
+---
 
-### 3. MongoDB
-- For local development: Install MongoDB Community Server from https://www.mongodb.com/try/download/community
-- Alternatively, use MongoDB Atlas (cloud) as configured in the code
-- If using local MongoDB, update the connection string in Backend/index.js
+## Phase 2: Local IP Address Setup (Crucial)
+Since you will be running the app on a physical phone, the phone needs to connect to the servers running on your laptop.
 
-### 4. Expo CLI (for React Native)
-- Install globally: `npm install -g @expo/cli`
-
-### 5. Android Studio (for Android development)
-- Download from https://developer.android.com/studio
-- Set up Android SDK and emulator
-
-### 6. Xcode (for iOS development, macOS only)
-- Download from Mac App Store
-- Required for iOS simulator
-
-### 7. Git
-- For cloning repositories if needed
-
-## Installation Steps
-
-### Backend Setup
-1. Navigate to the Backend directory:
+1. Open **Command Prompt** (cmd) on your laptop.
+2. Run the command:
+   ```cmd
+   ipconfig
    ```
+3. Locate your active Wi-Fi adapter and copy the **IPv4 Address** (it will look like `192.168.x.x` or `172.x.x.x`).
+4. In the `Frontend` directory, copy/rename `.env.example` to `.env` and update it with your laptop's IP address:
+   ```env
+   EXPO_PUBLIC_API_URL=http://<YOUR_IP_ADDRESS>:3501
+   EXPO_PUBLIC_API_URL2=http://<YOUR_IP_ADDRESS>:5000
+   ```
+   *(For example: `EXPO_PUBLIC_API_URL=http://192.168.1.15:3501`)*
+
+---
+
+## Phase 3: Start Node.js Backend Server
+1. In the `Backend` directory, copy/rename `.env.example` to `.env` (it contains the database connection string).
+2. Open a terminal/command prompt and navigate to the `Backend` directory:
+   ```cmd
    cd Backend
    ```
-
-2. Install dependencies:
-   ```
+3. Install the backend dependencies:
+   ```cmd
    npm install
    ```
+4. Start the backend server:
+   ```cmd
+   npm start
+   ```
+   *(Keep this terminal open. The backend runs on port 3501).*
 
-3. Ensure MongoDB is running (if using local instance)
+---
 
-### Frontend Setup
-1. Navigate to the Frontend directory:
-   ```
-   cd Frontend
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-### Python AI Components Setup
-1. Navigate to the Python directories:
-   ```
+## Phase 4: Start Face Recognition Server (AI)
+1. Open a **new** terminal window and navigate to the face recognition directory:
+   ```cmd
    cd Backend/FaceRecognation
-   cd Backend/Antispoofing/Model
    ```
-
-2. Install required Python packages:
+2. Create a clean Python virtual environment (do not use the previous developer's venv folder):
+   ```cmd
+   python -m venv venv
    ```
+3. Activate the virtual environment:
+   * **Windows (Command Prompt):** `venv\Scripts\activate`
+   * **Windows (PowerShell):** `.\venv\Scripts\Activate.ps1`
+   * **Mac/Linux:** `source venv/bin/activate`
+4. Install the required Python packages:
+   ```cmd
    pip install flask flask-cors numpy face-recognition tensorflow pillow opencv-python
    ```
+5. Start the Face Recognition server:
+   ```cmd
+   python App.py
+   ```
+   *(Keep this terminal open. The AI service runs on port 5000).*
 
-3. Note: The models (0.h5, 1.h5) and EncodeFile.p are already present in the repository
+---
 
-## Running the Application
+## Phase 5: Start Frontend App (Expo Mobile)
+1. Open a **new** terminal window and navigate to the `Frontend` directory:
+   ```cmd
+   cd Frontend
+   ```
+2. Install the mobile frontend dependencies:
+   ```cmd
+   npm install
+   ```
+3. Start the Expo builder:
+   ```cmd
+   npx expo start --clear
+   ```
+4. Connect your phone and laptop to the **same Wi-Fi network**.
+5. Open the **Expo Go** app on your phone and scan the QR code displayed in the terminal.
 
-### 1. Start MongoDB
-- If using local MongoDB: Start the MongoDB service
-- If using Atlas: No action needed (connection string is in code)
+---
 
-### 2. Start Backend Server
-```
-
-cd Backend
-npm start
-```
-- Server runs on http://localhost:3500
-
-### 3. Start Python Face Recognition Service
-```
-cd Backend/FaceRecognation
- 
-```
-- Assumes Flask runs on default port (5000)
-
-### 4. Start Python Antispoofing Service
-- The main.py is a standalone script, run as needed:
-```
-cd Backend/Antispoofing/Model
-python main.py
-```
-
-### 5. Start Frontend (React Native App)
-```
-cd Frontend
-expo start
-```
-- Choose platform: Android (a), iOS (i), or Web (w)
-- For Android: Ensure emulator is running or device is connected
-- For iOS: Ensure simulator is available
-
-## Configuration Notes
-
-- **Database**: Update MongoDB connection string in Backend/index.js if using different database
-- **Ports**: Backend on 3500, Python services on 5000 (default Flask)
-- **Environment Variables**: Consider using .env files for sensitive data like database credentials
-- **Models**: Ensure TensorFlow models are compatible with your Python version
-
-## Troubleshooting
-
-- **Port conflicts**: Change ports in code if 3500 or 5000 are in use
-- **Python dependencies**: Use virtual environment (`python -m venv venv`) to avoid conflicts
-- **React Native issues**: Clear cache with `expo r -c`
-- **Face recognition**: Ensure camera permissions are granted in the app
-
-## Development Notes
-
-- Backend uses JWT for authentication
-- Frontend uses Expo for cross-platform development
-- AI components use pre-trained models for face detection and spoofing prevention
-- Database schemas are defined in Backend/Models/
-
-For any issues, check console logs and ensure all services are running on correct ports.
+## Phase 6: How to Test the Complete Flow
+Once all three servers (Backend, AI, and Expo) are running:
+1. **Sign Up as HR**: Open the app on your phone, choose **HR**, and click **Sign Up** to create an HR account.
+2. **Set Office Location**: Log in as the HR, and fetch/set the Office Location. This establishes the office boundary geofence.
+3. **Register an Employee**: While logged in as HR, go to **Manage Employees** -> **Add Employee**. Upload a clear photo of the employee's face.
+4. **Compile Face Encodings (AI Database)**:
+   * Go back to the Face Recognition terminal (`Backend/FaceRecognation`).
+   * Press `Ctrl + C` to stop the Python server.
+   * Run the compiler script:
+     ```cmd
+     python encodings.py
+     ```
+     *(This reads the new employee's photo from the database and saves their facial features).*
+   * Restart the AI server:
+     ```cmd
+     python App.py
+     ```
+5. **Mark Attendance**:
+   * Log out of the HR account in the mobile app.
+   * Log in as the newly created **Employee**.
+   * Tap **Mark Attendance**.
+   * The app will check if you are within the office boundary, enable the camera, take your selfie, and mark your attendance successfully!

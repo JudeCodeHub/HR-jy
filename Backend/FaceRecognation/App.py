@@ -1,4 +1,5 @@
 
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import numpy as np
@@ -9,6 +10,7 @@ from io import BytesIO
 from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+
 
 # --- Fix for Keras 3 Flatten layer bug when loading .h5 models ---
 from keras.layers import Flatten
@@ -92,7 +94,8 @@ def preprocess_for_recognition(image_data):
 # Load anti-spoofing model globally
 try:
     print("Loading anti-spoofing model...")
-    antispoof_model = load_model(r"C:\Users\jaski\OneDrive\Desktop\Project final year\Project_MasterHR-main\Backend\Antispoofing\Model\1.h5")
+    model_path = os.path.join(os.path.dirname(__file__), '..', 'Antispoofing', 'Model', '1.h5')
+    antispoof_model = load_model(model_path)
     print("Model loaded successfully!")
 except Exception as e:
     print(f"Error loading model: {e}")

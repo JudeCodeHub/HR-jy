@@ -19,7 +19,7 @@ export default function Performance1({route}){
 
     const fetchData = async () => {
         try {
-          const response = await fetch(`http://192.168.229.100:3500/Employee/hr/${HR}`);
+          const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/Employee/hr/${HR}`);
           if (response.ok) {
             const data = await response.json();
             setEmployee(data);

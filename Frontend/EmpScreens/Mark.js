@@ -237,7 +237,7 @@ const UpdateRegister=()=>{
         // 4. Check if point is inside
         const isInside = turf.booleanPointInPolygon(pt, poly);
         
-        setwithinLoc(isInside);
+        setwithinLoc(isInside); // Reverted bypass: use turf verification
         
         // Optional: Calculate distance to first point just for UI feedback
         const dist = calculateDistance(
@@ -433,6 +433,14 @@ const renderFile=()=>{
           <Text style={{fontSize:14, color: "gray", marginTop: 5}}>
             Approx. distance to center: {distance}m
           </Text>
+          <Text style={{fontSize:12, color: "blue", marginTop: 5}}>
+            My GPS: Lat {currentLocation?.coords?.latitude?.toFixed(6)}, Lng {currentLocation?.coords?.longitude?.toFixed(6)}
+          </Text>
+          {location?.polygonPoints && (
+            <Text style={{fontSize:12, color: "purple", marginTop: 2, textAlign: 'center'}}>
+              Boundary points: {location.polygonPoints.map((p, idx) => `[${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}]`).join(' ')}
+            </Text>
+          )}
         </View>
            
 
